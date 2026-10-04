@@ -34,14 +34,16 @@ from enums import WriteStatus
 
 ABOUT = get_about_info()
 
+config = parse_config()
+
 class WikiFileManager(Screen):
     """wiki file manager"""
     BINDINGS = [
-            Binding("m", "app.push_screen('Wiki')", priority=True),
-            Binding("ctrl+a", "pre_mkfile"),
-            Binding("ctrl+r", "pre_rename"),
-            Binding("ctrl+d", "pre_rmfile"),
-            Binding("enter", "filedispatch", priority=True)
+            Binding(config["keymap"]["go_back"], "app.push_screen('Wiki')", priority=True),
+            Binding(config["keymap"]["create"], "pre_mkfile"),
+            Binding(config["keymap"]["rename"], "pre_rename"),
+            Binding(config["keymap"]["delete"], "pre_rmfile"),
+            Binding(config["keymap"]["confirm"], "filedispatch", priority=True)
 ]
 
     def compose(self) -> ComposeResult:
@@ -169,10 +171,10 @@ class WikiFileManager(Screen):
 class WikiScreen(Screen):
     """wiki screen, displays wiki content"""
     BINDINGS = [
-        Binding("m", "app.push_screen('WikiListScreen')", "back to wiki list", priority=True),
-        Binding("alt+e", "toggle_editor()", "toggle markdown editor", priority=True),
-        Binding("ctrl+s", "write()", "write changes to file", priority=True),
-        Binding("ctrl+f", "app.push_screen('WikiFileManager')", priority=True),
+        Binding(config["keymap"]["go_back"], "app.push_screen('WikiListScreen')", "back to wiki list", priority=True),
+        Binding(config["keymap"]["open_editor"], "toggle_editor()", "toggle markdown editor", priority=True),
+        Binding(config["keymap"]["write_changes"], "write()", "write changes to file", priority=True),
+        Binding(config["keymap"]["open_fm"], "app.push_screen('WikiFileManager')", priority=True),
     ]
 
     def compose(self) -> ComposeResult:
@@ -247,8 +249,8 @@ class WikiScreen(Screen):
 class MainMenu(Screen):
     """main menu screen"""
     BINDINGS = [
-        Binding("h", "app.focus_previous"),
-        Binding("l", "app.focus_next")
+        Binding(config["keymap"]["movement"]["left"], "app.focus_previous"),
+        Binding(config["keymap"]["movement"]["right"], "app.focus_next")
 ]
 
     def compose(self) -> ComposeResult:
@@ -266,13 +268,13 @@ class MainMenu(Screen):
 class WikiListScreen(Screen):
     """screen with a list of wiki"""
     BINDINGS = [
-            Binding("ctrl+a", "app.push_screen('WikiCreator')"),
-            Binding("ctrl+d", "delete_wiki()"),
-            Binding("j", "app.focus_next"),
-            Binding("k", "app.focus_previous"),
+            Binding(config["keymap"]["create"], "app.push_screen('WikiCreator')"),
+            Binding(config["keymap"]["delete"], "delete_wiki()"),
+            Binding(config["keymap"]["movement"]["down"], "app.focus_next"),
+            Binding(config["keymap"]["movement"]["up"], "app.focus_previous"),
             # force focus to move from input
-            Binding("ctrl+j", "app.focus_next", priority=True), 
-            Binding("ctrl+k", "app.focus_previous", priority=True),
+            Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["movement"]["down"]}", "app.focus_next", priority=True), 
+            Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["movement"]["up"]}", "app.focus_previous", priority=True),
 ]
 
     def compose(self) -> ComposeResult:
@@ -323,8 +325,8 @@ class WikiListScreen(Screen):
 class ConfirmDelete(Screen):
     """screen to confirm wiki deleting"""
     BINDINGS = [
-        Binding("h", "app.focus_previous"),
-        Binding("l", "app.focus_next")
+        Binding(config["keymap"]["movement"]["left"], "app.focus_previous"),
+        Binding(config["keymap"]["movement"]["right"], "app.focus_next")
 ]
 
     def compose(self) -> ComposeResult:
@@ -353,10 +355,10 @@ class ConfirmDelete(Screen):
 class WikiCreator(Screen):
     """screen creating wiki"""
     BINDINGS = [
-    Binding("ctrl+enter", "confirm"),
-    Binding("ctrl+escape", "app.push_screen('WikiListScreen')"),
-    Binding("ctrl+k", "app.focus_previous", priority=True),
-    Binding("ctrl+j", "app.focus_next", priority=True)
+    Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["confirm"]}", "confirm"),
+    Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["go_back"]}", "app.push_screen('WikiListScreen')"),
+    Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["movement"]["up"]}", "app.focus_previous", priority=True),
+    Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["movement"]["down"]}", "app.focus_next", priority=True)
 ]
 
     def compose(self) -> ComposeResult:
@@ -392,7 +394,7 @@ class CoreApp(App):
     TITLE = "microwiki"
     CSS_PATH = "data/style.tcss"
     BINDINGS = [
-        Binding("m", "to_menu()", "Back to main menu"),
+        Binding(config["keymap"]["go_back"], "to_menu()", "Back to main menu"),
     ]
 
     def on_mount(self):
@@ -423,33 +425,7 @@ class CoreApp(App):
 def main():
     """a main app runner function"""
     global app     
-    global config 
     global moving_via_fm
     moving_via_fm = False 
-
-    # checking config data types
-    config = parse_config()
-
-    print("START CHECKING DATA TYPES FROM CONFIG")
-    if type(config["theme"]) != str:
-        print("error: 'theme' value in config is not str") 
-        print("exiting")
-        sys.exit(1)
-    else:
-        print("succes: 'theme' value in config is str")
-    
-    if type(config["wikistorage"]) != str:
-        print("error: 'wikistorage' value in config is not str")
-        print("exiting")
-        sys.exit(1)
-    else:
-        print("succes: 'wikistorage' value in config is str")
-
-
-    print("all data types from config are valid") 
-    print("starting app")
-    sleep(1)
-
-    # running app
     app = CoreApp()
     app.run()

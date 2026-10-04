@@ -5,6 +5,6 @@ from os import mkdir
 
 if __name__ == "__main__":
     pdirs = PlatformDirs("microwiki", "justtechno")
-    if Path(pdirs.user_data_dir).exists() != True:
+    if not Path(pdirs.user_data_dir).exists():
         mkdir(pdirs.user_data_dir)
     main()
