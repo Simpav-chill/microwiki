@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class WriteStatus(Enum):
     SUCCESS = "file succesfully writen"
     WRITE_NOT_PERMITTED = "writing this file is not permitted"

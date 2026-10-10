@@ -8,6 +8,8 @@ from pathlib import Path
 import asyncio
 from time import sleep
 
+from platformdirs import PlatformDirs
+
 from about import get_about_info
 from textual import on
 from textual.app import App, ComposeResult
@@ -34,7 +36,8 @@ from enums import WriteStatus
 
 ABOUT = get_about_info()
 
-config = parse_config()
+config = parse_config() 
+pdirs = PlatformDirs("microwiki", "justtechno")
 
 class WikiFileManager(Screen):
     """wiki file manager"""
@@ -259,11 +262,78 @@ class MainMenu(Screen):
         Static("Main Menu", id="maintitle"),
         Horizontal(
             Button("Open wiki list", id="Wiki", classes="main_button"),
+            Button("Open quicknote", id="Quicknote", classes="main_button"),
             Button("About", id="About", classes="main_button"),
             id="main_button_container",
             ),
             id="mainmenu",
         )
+
+    @on(Button.Pressed, "#Wiki")
+    def move_to_wikilist(self) -> None:
+        self.app.push_screen("WikiListScreen")
+
+    @on(Button.Pressed, "#About")
+    def move_to_about_screen(self) -> None:
+        self.app.push_screen("About") 
+
+    @on(Button.Pressed, "#Quicknote")
+    def move_to_quicknote_screen(self) -> None:
+        self.app.push_screen("Quicknote") 
+
+class QuickNoteScreen(Screen):
+    """A quicknote screen"""
+    BINDINGS = [
+            Binding(config["keymap"]["movement"]["down"], "app.focus_next"),
+            Binding(config["keymap"]["movement"]["up"], "app.focus_previous"),
+            Binding(config["keymap"]["open_editor"], "toggle_editor"),
+            Binding(config["keymap"]["write_changes"], "write"),
+    ]
+
+    def compose(self) -> ComposeResult:
+        yield MarkdownViewer(id="quicknoteviewer") 
+        yield TextArea(id="quicknote_editor", language="markdown")
+
+    async def on_screen_resume(self):
+        await self.get_quicknote()
+        self.query_one("#quicknote_editor").styles.display = "none"
+    
+    async def action_toggle_editor(self) -> None:
+        """toggle editor"""
+        md_text = self.query_one("#quicknoteviewer").document.source # get text from markdown viewer
+        if config["editor"] == "Built-in":
+            if self.query_one("#quicknote_editor").styles.display == "none":
+                self.query_one("#quicknote_editor").styles.display = "block"
+                self.query_one("#quicknote_editor").text = md_text # load text from variable to editor
+            elif self.query_one("#quicknote_editor").styles.display == "block":
+                self.query_one("#quicknote_editor").styles.display = "none"
+        else:
+            with self.app.suspend():
+                os.system(f"{config["editor"]} {pdirs.user_data_dir}/quicknote.md")
+            with open(f"{pdirs.user_data_dir}/quicknote.md", "r", encoding="utf-8") as f:
+                await self.query_one("#quicknoteviewer").document.update(f.read()) 
+    
+    async def action_write(self) -> None:
+        """write changes to file and notify user"""
+        viewer = self.query_one("#quicknoteviewer")
+        text = self.query_one("#quicknote_editor").text
+        result = writefile(text, f"{pdirs.user_data_dir}/quicknote.md")
+        # notifying about result
+        self.notify(f"{result.value}: quicknote")
+        if result == WriteStatus.SUCCESS:
+            await viewer.document.update(text)
+
+    async def get_quicknote(self) -> None:
+        """get text from quicnote if it exitst"""
+        try:
+            with open(f"{pdirs.user_data_dir}/quicknote.md", "r", encoding="utf-8") as f:
+                await self.query_one("#quicknoteviewer").document.update(f.read())
+        except FileNotFoundError:
+            with open(f"{pdirs.user_data_dir}/quicknote.md", "w", encoding="utf-8") as f:
+                f.write("")
+
+
+            
 
 class WikiListScreen(Screen):
     """screen with a list of wiki"""
@@ -355,7 +425,7 @@ class ConfirmDelete(Screen):
 class WikiCreator(Screen):
     """screen creating wiki"""
     BINDINGS = [
-    Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["confirm"]}", "confirm"),
+    Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["confirm"]}", "confirm", priority=True),
     Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["go_back"]}", "app.push_screen('WikiListScreen')"),
     Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["movement"]["up"]}", "app.focus_previous", priority=True),
     Binding(f"{config["keymap"]["force_mod"]}+{config["keymap"]["movement"]["down"]}", "app.focus_next", priority=True)
@@ -364,6 +434,12 @@ class WikiCreator(Screen):
     def compose(self) -> ComposeResult:
         yield Input(id="name_input", placeholder="Wiki name", type="text")
         yield Input(id="description_input", placeholder="Wiki description(optional)", type="text")
+        yield Button(label="confirm renaming", id="confirm_button")
+    
+    @on(Button.Pressed, "#confirm_button")
+    def confirm_wrapper(self) -> None:
+        """just runninf a action_confirm method"""
+        self.action_confirm()
 
     def action_confirm(self) -> None:
         """validating input and configrming"""
@@ -406,6 +482,7 @@ class CoreApp(App):
         self.install_screen(WikiCreator(), name="WikiCreator")
         self.install_screen(ConfirmDelete(), name="ConfirmDelete")
         self.install_screen(WikiFileManager(), name="WikiFileManager")
+        self.install_screen(QuickNoteScreen(), name="Quicknote")
         self.push_screen("MainMenu")
         self.theme = config["theme"]
     
@@ -414,13 +491,6 @@ class CoreApp(App):
         os.chdir(config["wikistorage"])
         self.app.push_screen("MainMenu")
 
-    @on(Button.Pressed, "#Wiki")
-    def move_to_wikilist(self) -> None:
-        self.push_screen("WikiListScreen")
-
-    @on(Button.Pressed, "#About")
-    def move_to_about_screen(self) -> None:
-        self.push_screen("About") 
 
 def main():
     """a main app runner function"""

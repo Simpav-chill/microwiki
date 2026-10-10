@@ -1,7 +1,9 @@
-from ui import main
-from platformdirs import PlatformDirs
-from pathlib import Path
 from os import mkdir
+from pathlib import Path
+
+from platformdirs import PlatformDirs
+
+from ui import main
 
 if __name__ == "__main__":
     pdirs = PlatformDirs("microwiki", "justtechno")

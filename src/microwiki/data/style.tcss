@@ -131,3 +131,10 @@ ConfirmDelete {
 		height: 4;
 		margin: 0 0 1 1;
 }
+
+/* quicknote */
+
+
+QuickNoteScreen {
+  layout: horizontal;
+}

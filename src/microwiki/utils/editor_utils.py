@@ -1,10 +1,9 @@
+import errno
 import json
 import os
-import errno
-
-from utils.config_utils import parse_config
 
 from enums import WriteStatus
+from utils.config_utils import parse_config
 
 """a module with some editor/deleting/creating utils"""
 

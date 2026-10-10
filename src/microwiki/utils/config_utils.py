@@ -6,6 +6,7 @@ from pathlib import Path
 
 from platformdirs import PlatformDirs
 
+
 def parse_config():
     pdirs = PlatformDirs("microwiki", "justtechno") 
     configdirpath = Path(pdirs.user_config_dir)
