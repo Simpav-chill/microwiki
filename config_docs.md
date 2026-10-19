@@ -6,6 +6,8 @@ theme value - theme to set after running microwiki
 
 editor - what editor will open on hotkey(`open_editor` hotkey in config) in wiki - set to "Built-in" if you dont need external editor or to editor command(example: for neovim set to "nvim")
 
+css_path - path to a custom .tcss file, set to "Default" if you want a default stylesheet
+
 keymap - a dictionary with following values:
 
 - force_mod - a modifier to force perform action(used in some cases when widget grabbing focus on himself, not for all keybinds)

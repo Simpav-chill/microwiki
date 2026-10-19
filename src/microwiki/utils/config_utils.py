@@ -23,6 +23,7 @@ def parse_config():
                 "theme": "nord",
                 "wikistorage": f"{pdirs.user_data_dir}",
                 "editor": "Built-in",
+                "css_path": "Default",
                 "keymap": {
                     "force_mod": "ctrl",
                     "go_back": "m",

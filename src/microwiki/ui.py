@@ -259,7 +259,12 @@ class MainMenu(Screen):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Container(
-        Static("Main Menu", id="maintitle"),
+        Static(r"""
+        ||\\  //||  ()  //===   ||==\\   //--\\  \\        //  ()  ||//   ()
+        |||\\//|||  ||  ||      ||==//  ||    ||  \\  /\  //   ||  ||/    ||
+        ||| \/ |||  ||  ||      ||\\    ||    ||   \\//\\//    ||  ||\    ||
+        |||    |||  ||  \\===   || \\    \\--//     \/  \/     ||  ||\\   ||
+        """, id="splash"),
         Horizontal(
             Button("Open wiki list", id="Wiki", classes="main_button"),
             Button("Open quicknote", id="Quicknote", classes="main_button"),
@@ -468,7 +473,10 @@ class CoreApp(App):
     """a main app class"""
 
     TITLE = "microwiki"
-    CSS_PATH = "data/style.tcss"
+    if config["css_path"] == "Default" or config["css_path"] == None:
+        CSS_PATH = "data/style.tcss"
+    else:
+        CSS_PATH = config["css_path"]
     BINDINGS = [
         Binding(config["keymap"]["go_back"], "to_menu()", "Back to main menu"),
     ]

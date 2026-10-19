@@ -14,10 +14,8 @@ Screen {
     padding: 1 1;
 }
 
-#maintitle {
+#splash {
 		content-align: center middle;
-		height: 1fr;
-		width: 1fr;
 }
 
 #main_button_container {
