@@ -1,16 +1,12 @@
 """all the UI of app"""
 
 import os
-from posixpath import isfile
 import shutil
-import sys
 from pathlib import Path
-import asyncio
-from time import sleep
-
-from platformdirs import PlatformDirs
 
 from about import get_about_info
+from enums import WriteStatus
+from platformdirs import PlatformDirs
 from textual import on
 from textual.app import App, ComposeResult
 from textual.binding import Binding
@@ -26,13 +22,10 @@ from textual.widgets import (
     MarkdownViewer,
     Static,
     TextArea,
-    DirectoryTree,
 )
 from utils.config_utils import parse_config
 from utils.editor_utils import createwiki, writefile
 from utils.wikiparser import parselocalwiki, wikilist
-
-from enums import WriteStatus
 
 ABOUT = get_about_info()
 
@@ -454,9 +447,7 @@ class WikiCreator(Screen):
             self.notify("Fill the name input!")
         else:
             result = createwiki(name, description)
-            if result == WriteStatus.FAILED:
-                self.notify(f"{result.value}")
-            elif result == WriteStatus.SUCCESS:
+            if result == WriteStatus.FAILED or result == WriteStatus.SUCCESS:
                 self.notify(f"{result.value}")
             self.app.push_screen("WikiListScreen")
         

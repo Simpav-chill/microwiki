@@ -1,13 +1,13 @@
 [project]
-name = "microwiki"
-version = "0.1.5"
-description = "A TUI local lightweight knowledge base"
-readme = "README.md"
-authors = [
+name            = "microwiki"
+version         = "0.1.5"
+description     = "A TUI local lightweight knowledge base"
+readme          = "README.md"
+authors         = [
     { name = "justtechno", email = "daniz.ef2202@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = [
+dependencies    = [
     "platformdirs>=4.11.7",
     "pyinstaller>=6.22.3",
     "pytest>=9.1.1",
@@ -17,8 +17,14 @@ dependencies = [
 ]
 
 [project.scripts]
-microwiki = "microwiki:main"
+microwiki       = "microwiki:main"
+
+[tool.taskipy.tasks]
+build						= "pyinstaller --name='microwiki' --onefile --console --paths=src/microwiki --noconfirm --collect-all textual --add-data 'src/microwiki/data:data' src/microwiki/main.py"
+clean						= "rm -rf ./build && rm -rf ./dist"
+lint            = "ruff check ./src/microwiki/"
+lint_fix        = "ruff check ./src/microwiki/ --fix"
 
 [build-system]
-requires = ["uv_build>=0.12.8,<0.13.0"]
-build-backend = "uv_build"
+requires				= ["uv_build>=0.12.8,<0.13.0"]
+build-backend   = "uv_build"

@@ -9,7 +9,7 @@ it is a **second example**.
 | notion | cloud-first | proprietary | electron |
 | logseq | local-first | AGPL-V3.0 | electron |
 | affine | local and cloud both | MIT+proprietary | electron |
-| microwiki | local-first | GPL-V2.0 | textual |
+| microwiki | local-first | MIT | textual |
 
 ### code blocks
 ```python

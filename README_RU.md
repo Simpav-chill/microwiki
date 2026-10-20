@@ -38,25 +38,16 @@
 ##### Из исходного кода
 Рекомендуемый способ — сборка из исходников
 внимание: вам понадобится пакетный менеджер [uv](https://github.com/astral-sh/uv) для сборки
-
-На Mac/Linux:
 ```bash
 git clone https://github.com/justtechno/microwiki # клонирование репозитория
 cd ./microwiki # переход в клонированный репозиторий
-make build # сборка проекта
-```
-
-На Windows:
-```powershell
-git clone https://github.com/justtechno/microwiki # клонирование репозитория
-cd ./microwiki # переход в клонированный репозиторий
-make build_windows # сборка проекта с синтаксисом путей Windows
+uv run task build # сборка проекта
 ```
 
 #### Запуск без сборки
 Вы можете запустить microwiki без предварительной сборки. Сначала нужно клонировать репозиторий (как в шаге с установкой), а затем просто выполнить:
 ```bash
-make run
+uv run ./src/microwiki/main.py
 ```
 
 #### Из релизов (Releases)

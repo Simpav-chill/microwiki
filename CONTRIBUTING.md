@@ -56,5 +56,18 @@ Open pull request with 'enchancement' label and write about:
 3. The code itself.
 4. Any extra notes(if there are)
 
+# Internal tool usage
+
+## taskipy tasks
+The project uses taskipy for automation, there are a list of tasks.
+
+`uv run task build` - build a project via pyinstaller.
+
+`uv run task lint` - lint code via ruff.
+
+`uv run task lint_fix` - lint code via ruff and automatically fix it.
+
+`uv run task clean` - remove ./dist and ./build directories.
+
 ###### That is all
 ###### Thanks for wanting to help the project

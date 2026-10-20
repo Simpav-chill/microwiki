@@ -41,25 +41,16 @@ There are three installation ways
 ##### From source
 The recomended way is build it from source
 note: you will need [uv](https://github.com/astral-sh/uv) package manager to build it
-
-on mac/linux:
 ```bash
 git clone https://github.com/justtechno/microwiki # cloning repo
-cd ./microwiki # moving into cloned repo
-make build # building project
-```
-
-on windows:
-```powershell
-git clone  https://github.com/justtechno/microwiki# cloning repo
-cd ./microwiki # moving into cloned repo
-make build_windows # building project with windows path syntax
+cd .\microwiki # moving into cloned repo
+uv run task build # building project
 ```
 
 #### Running without building
 You can run microwiki without building it, at first you need to clone repo the dsame as in installation, then just run
 ```bash
-make run
+uv run ./src/microwiki/main.py
 ```
 
 #### From releases
