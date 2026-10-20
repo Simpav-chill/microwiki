@@ -23,13 +23,14 @@ from textual.widgets import (
     Static,
     TextArea,
 )
-from utils.config_utils import parse_config
+from utils.config_utils import parse_config, parse_language
 from utils.editor_utils import createwiki, writefile
 from utils.wikiparser import parselocalwiki, wikilist
 
 ABOUT = get_about_info()
 
 config = parse_config() 
+language = parse_language(config["language"])
 pdirs = PlatformDirs("microwiki", "justtechno")
 
 class WikiFileManager(Screen):
@@ -45,12 +46,12 @@ class WikiFileManager(Screen):
     def compose(self) -> ComposeResult:
         yield Header()
         yield DirectoryTree("./", id="fm_core") 
-        yield Input(id="fm_name_input", placeholder="input file name")
+        yield Input(id="fm_name_input", placeholder=language["Screens"]["Wikifilemanager"]["filename_input"])
         yield Container(
-        Static("Are you sure want to delete file?", id="deletetitle"),
+        Static(language["Screens"]["Wikifilemanager"]["delete_title"], id="deletetitle"),
         Horizontal(
-            Button("Yes", id="fm_yes", classes="fm_delete_button"),
-            Button("No", id="fm_no", classes="fm_delete_button"),
+            Button(language["Screens"]["Wikifilemanager"]["confirm"], id="fm_yes", classes="fm_delete_button"),
+            Button(language["Screens"]["Wikifilemanager"]["cancel"], id="fm_no", classes="fm_delete_button"),
             ),
             id="fm_deletecontainer"
         )
@@ -259,9 +260,9 @@ class MainMenu(Screen):
         |||    |||  ||  \\===   || \\    \\--//     \/  \/     ||  ||\\   ||
         """, id="splash"),
         Horizontal(
-            Button("Open wiki list", id="Wiki", classes="main_button"),
-            Button("Open quicknote", id="Quicknote", classes="main_button"),
-            Button("About", id="About", classes="main_button"),
+            Button(language["Screens"]["Mainmenu"]["Openwikilist"], id="Wiki", classes="main_button"),
+            Button(language["Screens"]["Mainmenu"]["Quicknote"], id="Quicknote", classes="main_button"),
+            Button(language["Screens"]["Mainmenu"]["About"], id="About", classes="main_button"),
             id="main_button_container",
             ),
             id="mainmenu",
@@ -347,8 +348,8 @@ class WikiListScreen(Screen):
 
     def compose(self) -> ComposeResult:
         wiki_list = wikilist(config["wikistorage"])
-        yield Label("Select wiki", id="wikilist_label")
-        yield Input(id="search")
+        yield Label(languagep["Screens"]["Wikilist"]["Select_wiki"], id="wikilist_label")
+        yield Input(id="search", placeholder=language["Screens"]["Wikilist"]["Search"])
         with VerticalScroll(id="scroller"): 
             for wikiname in wiki_list:
                 yield Button(wikiname, classes="wiki_button") # display all wiki
@@ -399,10 +400,10 @@ class ConfirmDelete(Screen):
 
     def compose(self) -> ComposeResult:
         yield Container(
-        Static("Are you sure want to delete wiki?", id="deletetitle"),
+        Static(language["Screens"]["Confirmdelete"]["delete_title"], id="deletetitle"),
         Horizontal(
-            Button("Yes", id="yes", classes="delete_button"),
-            Button("No", id="no", classes="delete_button"),
+            Button(language["Screens"]["Confirmdelete"]["confirm"], id="yes", classes="delete_button"),
+            Button(language["Screens"]["Confirmdelete"]["cancel"], id="no", classes="delete_button"),
             ),
             id="deletecontainer"
         )
@@ -430,9 +431,9 @@ class WikiCreator(Screen):
 ]
 
     def compose(self) -> ComposeResult:
-        yield Input(id="name_input", placeholder="Wiki name", type="text")
-        yield Input(id="description_input", placeholder="Wiki description(optional)", type="text")
-        yield Button(label="confirm renaming", id="confirm_button")
+        yield Input(id="name_input", placeholder=language["Screens"]["Wikicreator"]["Wikiname"], type="text")
+        yield Input(id="description_input", placeholder=language["Screens"]["Wikicreator"]["Wikidescription"], type="text")
+        yield Button(label=language["Screens"]["Wikicreator"]["Confirm"], id="confirm_button")
     
     @on(Button.Pressed, "#confirm_button")
     def confirm_wrapper(self) -> None:
@@ -457,7 +458,7 @@ class AboutScreen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Markdown(ABOUT, id="about_container")
+        yield MarkdownViewer(ABOUT, id="about_container")
 
 
 class CoreApp(App):

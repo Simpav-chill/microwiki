@@ -1,0 +1,29 @@
+{
+	"Screens": {
+		"Mainmenu": {
+			"Openwikilist": "Open wiki list",
+			"Quicknote": "Quicknote",
+			"About": "About microwiki"
+		},
+		"Wikilist": {
+			"Select_wiki": "Select wiki",
+			"Search": "Search for wiki..."
+		},
+		"Confirmdelete": {
+			"delete_title": "Are you sure want to delete wiki?",
+			"confirm": "Yes",
+			"cancel": "No"
+		},
+		"Wikicreator": {
+			"Wikiname": "Wiki name...",
+			"Wikidescription": "Wiki description(optional)...",
+			"Confirm": "Confirm creation"
+		},
+		"Wikifilemanager": {
+			"filename_input": "input filename...",
+			"delete_title": "Are you sure want to delete this file?",
+			"confirm": "yes",
+			"cancel": "no"
+		}
+	}
+}

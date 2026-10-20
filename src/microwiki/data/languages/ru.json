@@ -1,0 +1,29 @@
+{
+	"Screens": {
+		"Mainmenu": {
+			"Openwikilist": "Открыть список вики",
+			"Quicknote": "Быстрые заметки",
+			"About": "О microwiki"
+		},
+		"Wikilist": {
+			"Select_wiki": "Выберите вики",
+			"Search": "Искать вики..."
+		},
+		"Confirmdelete": {
+			"delete_title": "Вы уверены что хотите удалить вики?",
+			"confirm": "Да",
+			"cancel": "Нет"
+		},
+		"Wikicreator": {
+			"Wikiname": "Имя вики...",
+			"Wikidescription": "Описание вики...",
+			"Confirm": "Подтвердить создание"
+		},
+		"Wikifilemanager": {
+			"filename_input": "Введите имя файла...",
+			"delete_title": "Вы уверены что хотите удалить файл?",
+			"confirm": "Да",
+			"cancel": "Нет"
+		}
+	}
+}
