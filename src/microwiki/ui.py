@@ -348,7 +348,7 @@ class WikiListScreen(Screen):
 
     def compose(self) -> ComposeResult:
         wiki_list = wikilist(config["wikistorage"])
-        yield Label(languagep["Screens"]["Wikilist"]["Select_wiki"], id="wikilist_label")
+        yield Label(language["Screens"]["Wikilist"]["Select_wiki"], id="wikilist_label")
         yield Input(id="search", placeholder=language["Screens"]["Wikilist"]["Search"])
         with VerticalScroll(id="scroller"): 
             for wikiname in wiki_list:
