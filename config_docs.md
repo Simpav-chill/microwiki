@@ -1,4 +1,6 @@
-all values in config(on linux: ~/.config/microwiki/config.json, on mac: ~/Library/Application Suport/Microwiki/config.json)
+# config documentation
+
+it is a list all values in config(on linux: ~/.config/microwiki/config.json, on mac: ~/Library/Application Suport/Microwiki/config.json):
 
 wikistorage value - path to directory with all notes/wikis
 
@@ -7,6 +9,8 @@ theme value - theme to set after running microwiki
 editor - what editor will open on hotkey(`open_editor` hotkey in config) in wiki - set to "Built-in" if you dont need external editor or to editor command(example: for neovim set to "nvim")
 
 css_path - path to a custom .tcss file, set to "Default" if you want a default stylesheet
+
+language - a language to use ine ditor, currently only russian and english are available.
 
 keymap - a dictionary with following values:
 
